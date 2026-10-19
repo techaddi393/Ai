@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="ur" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اعوان کمپیوٹر ڈیجیٹل کنڈا - دریا خان بھکر</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Font (Urdu supported) -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&display=swap" rel="stylesheet">
+    <!-- html2pdf.js for PDF Generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        body {
+            font-family: 'Noto Nastaliq Urdu', serif;
+            background-color: #f3f4f6;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <div class="max-w-4xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden p-6 md:p-8">
+        
+        <!-- Header -->
+        <div class="text-center border-b pb-6 mb-6">
+            <h1 class="text-2xl md:text-3xl font-bold text-emerald-700">اعوان کمپیوٹر ڈیجیٹل کنڈا</h1>
+            <p class="text-lg text-gray-600 mt-1">دریا خان، بھکر — ایم کاشف</p>
+        </div>
+
+        <form id="kandaForm" class="space-y-6">
+            <input type="hidden" id="editIndex" value="-1">
+
+            <!-- Row 1: Date & Rickshaw Count -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1">تاریخ (Date)</label>
+                    <input type="date" id="billDate" required class="w-full p-3 border rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1">ریڈی / رکشوں کی تعداد</label>
+                    <input type="number" id="rickshawCount" value="1" min="1" class="w-full p-3 border rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none">
+                </div>
+            </div>
+
+            <!-- Row 2: Seller, Buyer & WhatsApp -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1">بیچنے والا (Seller)</label>
+                    <input type="text" id="sellerName" placeholder="بیچنے والے کا نام" required class="w-full p-3 border rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1">خریدنے والا (Buyer)</label>
+                    <input type="text" id="buyerName" placeholder="خریدنے والے کا نام" required class="w-full p-3 border rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1">واٹس ایپ نمبر</label>
+                    <input type="tel" id="whatsappNumber" placeholder="مثلاً 03001234567" class="w-full p-3 border rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none">
+                </div>
+            </div>
+
+            <!-- Row 3: Wood Categories (سفید گولا، گٹکا، پاوا، کریٹ، ٹوٹے، کھنگر، ثابت مال) -->
+            <div class="bg-gray-50 p-4 rounded-xl border">
+                <h3 class="font-bold text-gray-700 mb-3">لکڑی کی اقسام (وزن کلوگرام میں)</h3>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    <div>
+                        <label class="block text-xs text-gray-600 mb-1">سفید گولا</label>
+                        <input type="number" step="any" id="safaidGola" value="0" class="wood-input w-full p-2 border rounded-lg bg-white">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-gray-600 mb-1">گٹکا</label>
+                        <input type="number" step="any" id="gutka" value="0" class="wood-input w-full p-2 border rounded-lg bg-white">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-gray-600 mb-1">پاوا</label>
+                        <input type="number" step="any" id="pawa" value="0" class="wood-input w-full p-2 border rounded-lg bg-white">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-gray-600 mb-1">کریٹ</label>
+                        <input type="number" step="any" id="crate" value="0" class="wood-input w-full p-2 border rounded-lg bg-white">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-gray-600 mb-1">ٹوٹے</label>
+                        <input type="number" step="any" id="totay" value="0" class="wood-input w-full p-2 border rounded-lg bg-white">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-gray-600 mb-1">کھنگر</label>
+                        <input type="number" step="any" id="khangar" value="0" class="wood-input w-full p-2 border rounded-lg bg-white">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-gray-600 mb-1">ثابت مال</label>
+                        <input type="number" step="any" id="sabitMal" value="0" class="wood-input w-full p-2 border rounded-lg bg-white">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Row 4: Weights & Deduction -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1">کل وزن (Gross Weight - کلو)</label>
+                    <input type="number" step="any" id="grossWeight" required class="w-full p-3 border rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none bg-yellow-50 font-bold" oninput="calculateWeights()">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1">خالی وزن (Tare Weight - کلو)</label>
+                    <input type="number" step="any" id="tareWeight" value="0" required class="w-full p-3 border rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none bg-yellow-50 font-bold" oninput="calculateWeights()">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1">کٹوتی (Deduction %)</label>
+                    <select id="deductionPercent" class="w-full p-3 border rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none bg-white font-bold" onchange="calculateWeights()">
+                        <option value="0">کٹوتی نہیں (0%)</option>
+                        <option value="2">2 فیصد (2%)</option>
+                        <option value="5">5 فیصد (5%)</option>
+                        <option value="6">6 فیصد (6%)</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Live Calculation Summary Box -->
+            <div class="bg-emerald-50 border border-emerald-200 p-4 rounded-xl grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+                <div>
+                    <p class="text-sm text-gray-600">صافی وزن (کلو گرام)</p>
+                    <p id="netKgDisplay" class="text-xl font-bold text-emerald-800">0 کلو</p>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-600">صافی وزن (من و کلو)</p>
+                    <p id="netMaundDisplay" class="text-xl font-bold text-emerald-800">0 من 0 کلو</p>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-600">کٹوتی شدہ وزن</p>
+                    <p id="finalDisplay" class="text-xl font-bold text-emerald-800">0 من 0 کلو</p>
+                </div>
+            </div>
+
+            <!-- Buttons -->
+            <div class="flex flex-wrap gap-4 pt-2">
+                <button type="submit" id="saveBtn" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-6 rounded-xl transition shadow-lg">بل محفوظ کریں</button>
+                <button type="button" onclick="resetForm()" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-xl transition">نیا بل</button>
+            </div>
+        </form>
+
+        <!-- Saved Bills Section -->
+        <div class="mt-10 border-t pt-6">
+            <h2 class="text-xl font-bold text-gray-800 mb-4">محفوظ شدہ بلز کی لسٹ</h2>
+            <div class="overflow-x-auto">
+                <table class="w-full text-right border-collapse">
+                    <thead>
+                        <tr class="bg-gray-100 text-gray-700 text-sm">
+                            <th class="p-3 border">تاریخ</th>
+                            <th class="p-3 border">بیچنے والا / خریدنے والا</th>
+                            <th class="p-3 border">صافی وزن</th>
+                            <th class="p-3 border">ایکشن</th>
+                        </tr>
+                    </thead>
+                    <tbody id="billsTableBody">
+                        <!-- Dynamic Records -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Hidden Bill Receipt Template for PDF -->
+    <div id="pdfTemplate" class="hidden p-6 bg-white text-right max-w-lg mx-auto" style="font-family: 'Noto Nastaliq Urdu', serif;">
+        <div class="text-center border-b-2 pb-4 mb-4">
+            <h2 class="text-2xl font-bold text-emerald-700">اعوان کمپیوٹر ڈیجیٹل کنڈا</h2>
+            <p class="text-sm text-gray-600">دریا خان، بھکر — ایم کاشف</p>
+        </div>
+        <div class="mb-4 text-sm space-y-1">
+            <p><strong>تاریخ:</strong> <span id="pdfDate"></span></p>
+            <p><strong>بیچنے والا:</strong> <span id="pdfSeller"></span></p>
+            <p><strong>خریدنے والا:</strong> <span id="pdfBuyer"></span></p>
+            <p><strong>ریڈی/رکشہ تعداد:</strong> <span id="pdfRickshaw"></span></p>
+        </div>
+        <table class="w-full border-collapse border border-gray-300 text-xs mb-4">
+            <thead>
+                <tr class="bg-gray-100">
+                    <th class="border p-1">قسم</th>
+                    <th class="border p-1">وزن (کلو)</th>
+                </tr>
+            </thead>
+            <tbody id="pdfWoodTable"></tbody>
+        </table>
+        <div class="text-sm space-y-1 border-t pt-2">
+            <p><strong>کل وزن:</strong> <span id="pdfGross"></span> کلو</p>
+            <p><strong>خالی وزن:</strong> <span id="pdfTare"></span> کلو</p>
+            <p><strong>کٹوتی:</strong> <span id="pdfDeduction"></span> %</p>
+            <p class="text-base font-bold text-emerald-700"><strong>حتمی وزن:</strong> <span id="pdfFinal"></span></p>
+        </div>
+        <div class="mt-8 text-center text-xs text-gray-500 border-t pt-2">
+            تشریف لانے کا شکریہ!
+        </div>
+    </div>
+
+    <script>
+        // Set Today's Date
+        document.getElementById('billDate').valueAsDate = new Date();
+
+        // Load Saved WhatsApp Number and Names on startup
+        window.onload = function() {
+            if(localStorage.getItem('savedWhatsapp')) {
+                document.getElementById('whatsappNumber').value = localStorage.getItem('savedWhatsapp');
+            }
+            loadBills();
+        };
+
+        // Calculation Logic (1 Maund = 40 kg)
+        function calculateWeights() {
+            let gross = parseFloat(document.getElementById('grossWeight').value) || 0;
+            let tare = parseFloat(document.getElementById('tareWeight').value) || 0;
+            let deductionRate = parseFloat(document.getElementById('deductionPercent').value) || 0;
+
+            let netKg = gross - tare;
+            if(netKg < 0) netKg = 0;
+
+            let deductionAmount = (netKg * deductionRate) / 100;
+            let finalKg = netKg - deductionAmount;
+
+            // Convert to Maunds and KG
+            let maunds = Math.floor(finalKg / 40);
+            let remKg = (finalKg % 40).toFixed(2);
+
+            let netMaundsFull = Math.floor(netKg / 40);
+            let netRemKg = (netKg % 40).toFixed(2);
+
+            document.getElementById('netKgDisplay').innerText = netKg.toFixed(2) + " کلو";
+            document.getElementById('netMaundDisplay').innerText = netMaundsFull + " من " + netRemKg + " کلو";
+            document.getElementById('finalDisplay').innerText = maunds + " من " + remKg + " کلو";
+
+            return { netKg, finalKg, maunds, remKg };
+        }
+
+        // Save Bill (Create or Update)
+        document.getElementById('kandaForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            let whatsapp = document.getElementById('whatsappNumber').value;
+            if(whatsapp) {
+                localStorage.setItem('savedWhatsapp', whatsapp);
+            }
+
+            let calc = calculateWeights();
+
+            let billData = {
+                date: document.getElementById('billDate').value,
+                rickshaw: document.getElementById('rickshawCount').value,
+                seller: document.getElementById('sellerName').value,
+                buyer: document.getElementById('buyerName').value,
+                whatsapp: whatsapp,
+                safaidGola: document.getElementById('safaidGola').value,
+                gutka: document.getElementById('gutka').value,
+                pawa: document.getElementById('pawa').value,
+                crate: document.getElementById('crate').value,
+                totay: document.getElementById('totay').value,
+                khangar: document.getElementById('khangar').value,
+                sabitMal: document.getElementById('sabitMal').value,
+                gross: document.getElementById('grossWeight').value,
+                tare: document.getElementById('tareWeight').value,
+                deduction: document.getElementById('deductionPercent').value,
+                finalText: calc.maunds + " من " + calc.remKg + " کلو"
+            };
+
+            let bills = JSON.parse(localStorage.getItem('awanKandaBills')) || [];
+            let editIndex = parseInt(document.getElementById('editIndex').value);
+
+            if(editIndex === -1) {
+                bills.unshift(billData); // Add new to top
+            } else {
+                bills[editIndex] = billData; // Update existing
+                document.getElementById('editIndex').value = -1;
+                document.getElementById('saveBtn').innerText = "بل محفوظ کریں";
+            }
+
+            localStorage.setItem('awanKandaBills', JSON.stringify(bills));
+            loadBills();
+            resetForm();
+            alert("بل کامیابی سے محفوظ ہو گیا!");
+        });
+
+        // Load Bills into Table
+        function loadBills() {
+            let bills = JSON.parse(localStorage.getItem('awanKandaBills')) || [];
+            let tbody = document.getElementById('billsTableBody');
+            tbody.innerHTML = "";
+
+            if(bills.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" class="text-center p-4 text-gray-500">کوئی ریکارڈ موجود نہیں</td></tr>`;
+                return;
+            }
+
+            bills.forEach((bill, index) => {
+                let tr = document.createElement('tr');
+                tr.className = "border-b hover:bg-gray-50 text-sm";
+                tr.innerHTML = `
+                    <td class="p-3">${bill.date}</td>
+                    <td class="p-3">بیچنے والا: <strong>${bill.seller}</strong><br><span class="text-xs text-gray-500">خریدنے والا: ${bill.buyer}</span></td>
+                    <td class="p-3 font-bold text-emerald-700">${bill.finalText}</td>
+                    <td class="p-3 space-x-1 space-x-reverse">
+                        <button onclick="editBill(${index})" class="bg-blue-500 text-white px-2.5 py-1 rounded text-xs hover:bg-blue-600">ایڈٹ</button>
+                        <button onclick="deleteBill(${index})" class="bg-red-500 text-white px-2.5 py-1 rounded text-xs hover:bg-red-600">ڈیلیٹ</button>
+                        <button onclick="generatePDF(${index})" class="bg-emerald-600 text-white px-2.5 py-1 rounded text-xs hover:bg-emerald-700">PDF</button>
+                        <button onclick="sendWhatsApp(${index})" class="bg-green-600 text-white px-2.5 py-1 rounded text-xs hover:bg-green-700">واٹس ایپ</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Edit Bill
+        function editBill(index) {
+            let bills = JSON.parse(localStorage.getItem('awanKandaBills')) || [];
+            let bill = bills[index];
+
+            document.getElementById('billDate').value = bill.date;
+            document.getElementById('rickshawCount').value = bill.rickshaw;
+            document.getElementById('sellerName').value = bill.seller;
+            document.getElementById('buyerName').value = bill.buyer;
+            document.getElementById('whatsappNumber').value = bill.whatsapp || "";
+            document.getElementById('safaidGola').value = bill.safaidGola;
+            document.getElementById('gutka').value = bill.gutka;
+            document.getElementById('pawa').value = bill.pawa;
+            document.getElementById('crate').value = bill.crate;
+            document.getElementById('totay').value = bill.totay;
+            document.getElementById('khangar').value = bill.khangar;
+            document.getElementById('sabitMal').value = bill.sabitMal;
+            document.getElementById('grossWeight').value = bill.gross;
+            document.getElementById('tareWeight').value = bill.tare;
+            document.getElementById('deductionPercent').value = bill.deduction;
+
+            document.getElementById('editIndex').value = index;
+            document.getElementById('saveBtn').innerText = "بل اپ ڈیٹ کریں";
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            calculateWeights();
+        }
+
+        // Delete Bill
+        function deleteBill(index) {
+            if(confirm("کیا آپ واقعی اس بل کو ڈیلیٹ کرنا چاہتے ہیں؟")) {
+                let bills = JSON.parse(localStorage.getItem('awanKandaBills')) || [];
+                bills.splice(index, 1);
+                localStorage.setItem('awanKandaBills', JSON.stringify(bills));
+                loadBills();
+            }
+        }
+
+        // Reset Form
+        function resetForm() {
+            document.getElementById('kandaForm').reset();
+            document.getElementById('billDate').valueAsDate = new Date();
+            document.getElementById('editIndex').value = -1;
+            document.getElementById('saveBtn').innerText = "بل محفوظ کریں";
+            calculateWeights();
+        }
+
+        // Generate PDF
+        function generatePDF(index) {
+            let bills = JSON.parse(localStorage.getItem('awanKandaBills')) || [];
+            let b = bills[index];
+
+            document.getElementById('pdfDate').innerText = b.date;
+            document.getElementById('pdfSeller').innerText = b.seller;
+            document.getElementById('pdfBuyer').innerText = b.buyer;
+            document.getElementById('pdfRickshaw').innerText = b.rickshaw;
+            document.getElementById('pdfGross').innerText = b.gross;
+            document.getElementById('pdfTare').innerText = b.tare;
+            document.getElementById('pdfDeduction').innerText = b.deduction;
+            document.getElementById('pdfFinal').innerText = b.finalText;
+
+            let woodRows = "";
+            let items = [
+                {name: 'سفید گولا', val: b.safaidGola},
+                {name: 'گٹکا', val: b.gutka},
+                {name: 'پاوا', val: b.pawa},
+                {name: 'کریٹ', val: b.crate},
+                {name: 'ٹوٹے', val: b.totay},
+                {name: 'کھنگر', val: b.khangar},
+                {name: 'ثابت مال', val: b.sabitMal}
+            ];
+
+            items.forEach(item => {
+                if(parseFloat(item.val) > 0) {
+                    woodRows += `<tr><td class="border p-1">${item.name}</td><td class="border p-1">${item.val} کلو</td></tr>`;
+                }
+            });
+            document.getElementById('pdfWoodTable').innerHTML = woodRows;
+
+            let element = document.getElementById('pdfTemplate');
+            element.classList.remove('hidden');
+
+            let opt = {
+                margin:       0.5,
+                filename:     `Awan-Kanda-Bill-${b.seller}.pdf`,
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2 },
+                jsPDF:        { unit: 'in', format: 'a6', orientation: 'portrait' }
+            };
+
+            html2pdf().from(element).save().then(() => {
+                element.classList.add('hidden');
+            });
+        }
+
+        // Send WhatsApp Message
+        function sendWhatsApp(index) {
+            let bills = JSON.parse(localStorage.getItem('awanKandaBills')) || [];
+            let b = bills[index];
+
+            if(!b.whatsapp) {
+                alert("اس بل کے ساتھ واٹس ایپ نمبر درج نہیں ہے!");
+                return;
+            }
+
+            let msg = `*اعوان کمپیوٹر ڈیجیٹل کنڈا، دریا خان*%0A` +
+                      `----------------------------------%0A` +
+                      `تاریخ: ${b.date}%0A` +
+                      `بیچنے والا: ${b.seller}%0A` +
+                      `خریدنے والا: ${b.buyer}%0A` +
+                      `رکشہ/ریڈی: ${b.rickshaw}%0A` +
+                      `----------------------------------%0A` +
+                      `کل وزن: ${b.gross} کلو%0A` +
+                      `خالی وزن: ${b.tare} کلو%0A` +
+                      `کٹوتی: ${b.deduction}%%0A` +
+                      `*صافی حتمی وزن: ${b.finalText}*%0A` +
+                      `----------------------------------%0A` +
+                      `شکریہ! ایم کاشف`;
+
+            let phone = b.whatsapp.replace(/[^0-9]/g, '');
+            // If local number like 0300..., convert to 92300...
+            if(phone.startsWith('0')) {
+                phone = '92' + phone.substring(1);
+            }
+
+            window.open(`https://api.whatsapp.com/send?phone=${phone}&text=${msg}`, '_blank');
+        }
+    </script>
+</body>
+</html>
